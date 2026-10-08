@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Elbi Production</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0B0D; --surface:#17171A; --text:#F3F1EA; --muted:#8A8A8F;
+    --accent:#C9A15A; --line:#2A2A2E;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;overflow:hidden;}
+  .display{font-family:'Bebas Neue',Impact,sans-serif;letter-spacing:.03em;}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:40;height:calc(52px + env(safe-area-inset-top,0px));
+    padding-top:env(safe-area-inset-top,0px);
+    display:flex;align-items:center;gap:12px;padding-left:14px;padding-right:14px;
+    background:linear-gradient(180deg,rgba(11,11,13,.96),rgba(11,11,13,.75));
+    border-bottom:1px solid var(--line);
+  }
+  .icon-btn{width:38px;height:38px;border:none;background:none;color:var(--text);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;border-radius:8px;flex-shrink:0;}
+  .icon-btn:hover{background:var(--surface);}
+  .burger span{display:block;width:19px;height:2px;background:var(--text);margin:4px 0;border-radius:2px;}
+  .back-arrow{font-size:20px;}
+  .topbar .label{font-size:13.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .topbar .label b{color:var(--text);font-weight:600;}
+
+  /* ---------- drawer ---------- */
+  .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:49;opacity:0;pointer-events:none;transition:opacity .2s;}
+  .backdrop.open{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;top:0;bottom:0;left:0;width:250px;max-width:78vw;z-index:50;
+    background:#111113;border-right:1px solid var(--line);
+    padding-top:calc(16px + env(safe-area-inset-top,0px));
+    padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));
+    transform:translateX(-100%);transition:transform .22s ease;
+    overflow-y:auto;
+  }
+  .drawer.open{transform:translateX(0);}
+  .brand{font-size:19px;line-height:1;margin:0 18px 20px;color:var(--text);}
+  .brand span{display:block;color:var(--accent);font-size:10.5px;letter-spacing:.2em;margin-top:4px;font-family:'Inter';font-weight:600;}
+  .sectors{display:flex;flex-direction:column;gap:2px;padding:0 10px;}
+  .sector-btn{
+    width:100%;padding:12px 10px;border:none;background:none;color:var(--muted);
+    cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px;
+    font-size:15px;font-weight:500;text-align:left;transition:background .15s,color .15s;
+  }
+  .sector-btn .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .15s,transform .15s;}
+  .sector-btn.active{background:var(--surface);color:var(--text);}
+  .sector-btn.active .dot{background:var(--accent);transform:scale(1.3);}
+  .sector-btn:hover{color:var(--text);}
+  .org-list{display:flex;flex-direction:column;gap:1px;padding:4px 0 10px 30px;}
+  .org-btn{
+    border:none;background:none;color:var(--muted);cursor:pointer;
+    font-size:13.5px;text-align:left;padding:8px 10px;border-radius:8px;
+    border-left:2px solid var(--line);
+  }
+  .org-btn.active{color:var(--accent);border-left-color:var(--accent);background:var(--surface);}
+  .org-btn:hover{color:var(--text);}
+
+  /* ---------- grid view ---------- */
+  .wrap{position:absolute;top:calc(52px + env(safe-area-inset-top,0px));left:0;right:0;bottom:0;overflow:hidden;}
+  .grid{height:100%;overflow-y:auto;padding:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .cell{position:relative;aspect-ratio:9/16;border-radius:10px;overflow:hidden;cursor:pointer;
+    background:linear-gradient(160deg,#1c1c20,#0b0b0d 70%);border:1px solid var(--line);}
+  .cell img{width:100%;height:100%;object-fit:cover;display:block;}
+  .cell .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+  .cell .ph::after{content:'';width:0;height:0;margin-left:3px;
+    border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:14px solid rgba(243,241,234,.55);}
+  .cell .cap{position:absolute;left:0;right:0;bottom:0;padding:16px 6px 6px;font-size:10px;line-height:1.2;
+    color:var(--text);background:linear-gradient(0deg,rgba(0,0,0,.85),transparent);}
+
+  /* ---------- feed (player) view ---------- */
+  .feed{height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;}
+  .feed::-webkit-scrollbar{display:none;} .feed{scrollbar-width:none;}
+  .slide{height:100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;
+    position:relative;display:flex;align-items:center;justify-content:center;
+    background:#000;border-bottom:1px solid var(--line);}
+  .video-wrap{position:relative;height:100%;width:100%;max-width:520px;margin:0 auto;}
+  .video-wrap iframe{width:100%;height:100%;border:0;display:block;background:#000;}
+  .meta{position:absolute;left:0;right:0;bottom:0;padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px));
+    background:linear-gradient(0deg,rgba(0,0,0,.85),rgba(0,0,0,0));pointer-events:none;}
+  .meta .tag{display:inline-block;font-size:11px;letter-spacing:.14em;color:var(--accent);
+    border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:10px;font-weight:600;}
+  .meta h2{margin:0 0 4px;font-size:24px;font-weight:600;letter-spacing:-.01em;}
+  .meta p{margin:0;color:var(--muted);font-size:13.5px;max-width:34ch;}
+
+  .empty-state{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;color:var(--muted);text-align:center;padding:0 40px;}
+  .empty-state .display{font-size:36px;color:var(--text);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="icon-btn burger" id="burgerBtn"><span></span><span></span><span></span></button>
+  <button class="icon-btn back-arrow" id="backBtn" style="display:none;">←</button>
+  <div class="label" id="topLabel"><b>Elbi Production</b></div>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+<nav class="drawer" id="drawer">
+  <div class="brand display">ELBİ<span>PRODUCTION</span></div>
+  <div class="sectors" id="sectors"></div>
+</nav>
+
+<div class="wrap">
+  <div class="grid" id="grid"></div>
+  <main class="feed" id="feed" style="display:none;"></main>
+</div>
+
+<script>
+/* =====================================================================
+   VİDEO EKLEMEK İÇİN: aşağıdaki VIDEOS dizisine yeni bir satır ekle.
+   youtubeId: YouTube linkindeki "shorts/" veya "v=" kısmından sonraki kod
+   sector: "saglikreels" | "egitim" | "sanayi" (SECTORS listesine de ekle)
+   org: kurum/marka adı (opsiyonel) — aynı sektörde 2+ farklı org varsa
+   menüde otomatik alt liste açılır.
+   ===================================================================== */
+
+const SECTORS = [
+  { id: 'tumu',        label: 'Tümü' },
+  { id: 'saglikreels', label: 'Sağlıkreels' },
+  { id: 'egitim',      label: 'Eğitim' },
+  { id: 'sanayi',      label: 'Sanayi Tanıtım' },
+];
+
+const VIDEOS = [
+  { title: 'Eğitim İçeriği 1', sector: 'egitim', org: '', youtubeId: 'nwKrOPRkH38', desc: '' },
+  { title: 'Eğitim İçeriği 2', sector: 'egitim', org: '', youtubeId: 'QVnO_DdlaJQ', desc: '' },
+  { title: 'Eğitim İçeriği 3', sector: 'egitim', org: '', youtubeId: 'LIVncVSq8as', desc: '' },
+
+  { title: 'Başkent Hastanesi — Reels 1', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'AQL2BDiCn0U', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 2', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'hy0QWKsm2Wo', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 3', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'SRP3ug0bedY', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 4', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'Il9oDXrfxN0', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 5', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'lKFFNESnmdE', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 6', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'f-JLK3qsvNE', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 7', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'PIw7bHcGl58', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 8', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'e_KagUgWgT8', desc: '' },
+  { title: 'Kışla Yerleşkesi — Reels 1', sector: 'saglikreels', org: 'Kışla Yerleşkesi', youtubeId: 'kv598S07n4w', desc: '' },
+];
+
+const drawerEl = document.getElementById('drawer');
+const backdropEl = document.getElementById('backdrop');
+const sectorsEl = document.getElementById('sectors');
+const gridEl = document.getElementById('grid');
+const feedEl = document.getElementById('feed');
+const burgerBtn = document.getElementById('burgerBtn');
+const backBtn = document.getElementById('backBtn');
+const topLabel = document.getElementById('topLabel');
+
+let activeSector = 'tumu';
+let activeOrg = null;
+let expandedSector = null;
+let view = 'grid'; // 'grid' | 'feed'
+
+function orgsFor(sectorId){
+  return [...new Set(VIDEOS.filter(v=>v.sector===sectorId && v.org).map(v=>v.org))];
+}
+function sectorLabel(id){ const s=SECTORS.find(s=>s.id===id); return s?s.label:id; }
+function currentList(){
+  let list = activeSector==='tumu' ? VIDEOS : VIDEOS.filter(v=>v.sector===activeSector);
+  if(activeOrg) list = list.filter(v=>v.org===activeOrg);
+  return list;
+}
+
+function openDrawer(){ drawerEl.classList.add('open'); backdropEl.classList.add('open'); }
+function closeDrawer(){ drawerEl.classList.remove('open'); backdropEl.classList.remove('open'); }
+burgerBtn.addEventListener('click', openDrawer);
+backdropEl.addEventListener('click', closeDrawer);
+
+function renderSectors(){
+  sectorsEl.innerHTML = SECTORS.map(s => {
+    const orgs = s.id==='tumu' ? [] : orgsFor(s.id);
+    const open = expandedSector===s.id && orgs.length>0;
+    const orgHtml = open ? `
+      <div class="org-list">
+        <button class="org-btn ${activeOrg===null?'active':''}" data-org="">Tümü</button>
+        ${orgs.map(o=>`<button class="org-btn ${activeOrg===o?'active':''}" data-org="${o}">${o}</button>`).join('')}
+      </div>` : '';
+    return `<div class="sector-group">
+        <button class="sector-btn ${s.id===activeSector?'active':''}" data-id="${s.id}">
+          <span class="dot"></span><span>${s.label}</span>
+        </button>
+        ${orgHtml}
+      </div>`;
+  }).join('');
+
+  sectorsEl.querySelectorAll('.sector-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.dataset.id;
+      if(activeSector===id){
+        expandedSector = expandedSector===id ? null : id;
+      } else {
+        activeSector = id; activeOrg = null;
+        expandedSector = orgsFor(id).length>0 ? id : null;
+      }
+      renderSectors(); showGrid(); closeDrawer();
+    });
+  });
+  sectorsEl.querySelectorAll('.org-btn').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      activeOrg = btn.dataset.org || null;
+      renderSectors(); showGrid(); closeDrawer();
+    });
+  });
+}
+
+function updateTopLabel(){
+  let txt = '<b>' + sectorLabel(activeSector) + '</b>';
+  if(activeOrg) txt += ' · ' + activeOrg;
+  topLabel.innerHTML = txt;
+}
+
+function showGrid(){
+  view = 'grid';
+  gridEl.style.display='grid'; feedEl.style.display='none';
+  burgerBtn.style.display='flex'; backBtn.style.display='none';
+  updateTopLabel();
+  renderGrid();
+}
+function showFeed(startIndex){
+  view = 'feed';
+  gridEl.style.display='none'; feedEl.style.display='block';
+  burgerBtn.style.display='none'; backBtn.style.display='flex';
+  renderFeed();
+  const slides = feedEl.querySelectorAll('.slide');
+  if(slides[startIndex]) slides[startIndex].scrollIntoView({behavior:'instant', block:'start'});
+}
+backBtn.addEventListener('click', showGrid);
+
+function renderGrid(){
+  const list = currentList();
+  if(list.length===0){
+    gridEl.style.display='block';
+    gridEl.innerHTML = `<div class="empty-state">
+        <div class="display">HENÜZ VİDEO YOK</div>
+        <p>Bu filtrede video eklemek için VIDEOS listesine YouTube linkini ekle.</p>
+      </div>`;
+    return;
+  }
+  gridEl.style.display='grid';
+  gridEl.innerHTML = list.map((v,i)=>`
+    <div class="cell" data-i="${i}">
+      <img src="https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg" alt=""
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="ph" style="display:none;"></div>
+      <div class="cap">${v.title}</div>
+    </div>
+  `).join('');
+  gridEl.querySelectorAll('.cell').forEach(c=>{
+    c.addEventListener('click', ()=> showFeed(parseInt(c.dataset.i,10)));
+  });
+}
+
+function renderFeed(){
+  const list = currentList();
+  feedEl.innerHTML = list.map(v => `
+    <section class="slide">
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1&playsinline=1"
+          title="${v.title}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen loading="lazy"></iframe>
+        <div class="meta" style="pointer-events:none;">
+          <span class="tag">${sectorLabel(v.sector)}${v.org ? ' · '+v.org : ''}</span>
+          <h2>${v.title}</h2>
+          <p>${v.desc||''}</p>
+        </div>
+      </div>
+    </section>
+  `).join('');
+}
+
+renderSectors();
+showGrid();
+</script>
+</body>
+</html>
