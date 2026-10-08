@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Elbi Production — Video Prodüksiyon Portföyü</title>
+<meta name="description" content="Sağlık, eğitim ve sanayi sektörleri için kurumsal tanıtım ve reels prodüksiyonu portföyü.">
+
+<!-- Paylaşım önizlemesi (WhatsApp / Instagram / Twitter linki attığında çıkan kart) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Elbi Production — Video Prodüksiyon Portföyü">
+<meta property="og:description" content="Sağlık, eğitim ve sanayi sektörleri için kurumsal tanıtım ve reels prodüksiyonu portföyü.">
+<meta property="og:image" content="https://img.youtube.com/vi/AQL2BDiCn0U/hqdefault.jpg">
+<meta property="og:url" content="https://ahmettelbi.github.io/elbi-production/">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0A0B'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='34' fill='%23C9A15A' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A0B; --surface:#17171A; --card:#131316; --text:#F5F3EE; --muted:#9B9B9F;
+    --accent:#C9A15A; --accent-soft:rgba(201,161,90,.14); --line:rgba(255,255,255,.08);
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;overflow:hidden;}
+  .display{font-family:'Bebas Neue',Impact,sans-serif;letter-spacing:.03em;font-weight:400;}
+
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:40;height:calc(54px + env(safe-area-inset-top,0px));
+    padding-top:env(safe-area-inset-top,0px);
+    display:flex;align-items:center;gap:12px;padding-left:16px;padding-right:12px;
+    background:linear-gradient(180deg,rgba(10,10,11,.97),rgba(10,10,11,.8));
+    border-bottom:1px solid var(--line);
+  }
+  .menu-btn{
+    border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer;
+    font-family:'Inter';font-size:12.5px;font-weight:600;letter-spacing:.08em;
+    padding:8px 16px;border-radius:999px;flex-shrink:0;transition:border-color .15s,color .15s;
+  }
+  .menu-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .icon-btn{width:36px;height:36px;border:none;background:none;color:var(--text);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;border-radius:8px;flex-shrink:0;font-size:19px;}
+  .icon-btn:hover{background:var(--surface);}
+  .topbar .label{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+  .topbar .label b{color:var(--text);font-weight:600;}
+  .ply-cta{flex-shrink:0;padding-top:12px;display:flex;justify-content:center;}
+  .req-btn{
+    background:var(--accent);color:#1a1408;border:none;cursor:pointer;
+    padding:12px 20px;border-radius:999px;font-size:13px;font-weight:600;
+    box-shadow:0 10px 26px -10px rgba(201,161,90,.55);width:100%;max-width:320px;
+  }
+  .req-btn:hover{filter:brightness(1.08);}
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:60;opacity:0;pointer-events:none;transition:opacity .2s;
+    display:flex;align-items:center;justify-content:center;padding:16px;}
+  .modal-backdrop.open{opacity:1;pointer-events:auto;}
+  .modal{
+    background:#111113;border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    width:100%;max-width:480px;max-height:88vh;display:flex;flex-direction:column;
+    box-shadow:0 30px 70px -20px rgba(0,0,0,.7);
+  }
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);}
+  .modal-head b{font-size:14.5px;}
+  .modal-head button{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:4px 8px;}
+  .modal iframe{width:100%;height:68vh;border:0;background:#fff;}
+
+  .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:49;opacity:0;pointer-events:none;transition:opacity .22s;}
+  .backdrop.open{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;top:0;bottom:0;left:0;width:270px;max-width:80vw;z-index:50;
+    background:#0E0E10;border-right:1px solid var(--line);
+    padding-top:calc(20px + env(safe-area-inset-top,0px));
+    padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
+    transform:translateX(-100%);transition:transform .25s cubic-bezier(.4,0,.2,1);
+    overflow-y:auto;
+  }
+  .drawer.open{transform:translateX(0);}
+  .brand{font-size:21px;line-height:1;margin:0 20px 26px;color:var(--text);}
+  .brand span{display:block;color:var(--accent);font-size:10.5px;letter-spacing:.24em;margin-top:5px;font-family:'Inter';font-weight:600;}
+  .sectors{display:flex;flex-direction:column;gap:2px;padding:0 12px;}
+  .sector-btn{
+    width:100%;padding:13px 12px;border:none;background:none;color:var(--muted);
+    cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:11px;
+    font-size:15px;font-weight:500;text-align:left;transition:background .15s,color .15s;
+  }
+  .sector-btn .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .15s,transform .15s;}
+  .sector-btn .cnt{margin-left:auto;font-size:11.5px;color:var(--muted);font-weight:500;}
+  .sector-btn.active{background:var(--accent-soft);color:var(--text);}
+  .sector-btn.active .dot{background:var(--accent);transform:scale(1.4);}
+  .sector-btn.active .cnt{color:var(--accent);}
+  .sector-btn:hover{color:var(--text);}
+  .org-list{display:flex;flex-direction:column;gap:1px;padding:4px 0 10px 28px;}
+  .org-btn{
+    border:none;background:none;color:var(--muted);cursor:pointer;width:100%;
+    font-size:13px;text-align:left;padding:8px 10px;border-radius:8px;
+    border-left:2px solid var(--line);display:flex;align-items:center;
+  }
+  .org-btn .cnt{margin-left:auto;font-size:11px;color:var(--muted);}
+  .org-btn.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-soft);}
+  .org-btn.active .cnt{color:var(--accent);}
+  .org-btn:hover{color:var(--text);}
+
+  .wrap{position:absolute;top:calc(54px + env(safe-area-inset-top,0px));left:0;right:0;bottom:0;overflow:hidden;}
+  .grid{height:100%;overflow-y:auto;}
+  .grid-cells{padding:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+  .section-head{padding:20px 16px 2px;display:flex;align-items:baseline;gap:10px;}
+  .section-head .eyebrow{font-size:10px;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;font-weight:600;}
+  .section-head h3{margin:3px 0 10px;font-family:'Bebas Neue';font-size:25px;letter-spacing:.02em;font-weight:400;color:var(--text);}
+  .section-head .cnt{font-size:12px;color:var(--muted);}
+  .cell{position:relative;aspect-ratio:9/16;border-radius:10px;overflow:hidden;cursor:pointer;
+    background:linear-gradient(160deg,#1c1c20,#0b0b0d 70%);border:1px solid var(--line);}
+  .cell img{width:100%;height:100%;object-fit:cover;display:block;}
+  .cell .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+  .cell .ph::after{content:'';width:0;height:0;margin-left:3px;
+    border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:14px solid rgba(245,243,238,.5);}
+
+  .feed{height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;}
+  .feed::-webkit-scrollbar{display:none;} .feed{scrollbar-width:none;}
+  .slide{height:100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;
+    display:flex;flex-direction:column;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));
+    border-bottom:1px solid var(--line);}
+  .ply-head{flex-shrink:0;padding-bottom:12px;}
+  .ply-head .eyebrow{font-size:10.5px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;font-weight:600;}
+  .ply-head h2{margin:5px 0 0;font-size:20px;font-weight:600;letter-spacing:-.01em;color:var(--text);}
+  .ply-frame{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;}
+  .ply-frame .inner{
+    position:relative;height:100%;max-height:100%;aspect-ratio:9/16;max-width:100%;
+    border-radius:18px;overflow:hidden;border:1px solid var(--line);
+    background:#000;box-shadow:0 24px 50px -16px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.02);
+  }
+  .ply-frame iframe{width:100%;height:100%;border:0;display:block;}
+  .ply-caption{flex-shrink:0;padding-top:12px;}
+  .ply-caption p{margin:0;color:var(--muted);font-size:13px;line-height:1.5;max-width:46ch;}
+
+  .empty-state{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;color:var(--muted);text-align:center;padding:0 40px;}
+  .empty-state .display{font-size:34px;color:var(--text);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="menu-btn" id="burgerBtn">MENÜ</button>
+  <button class="icon-btn" id="backBtn" style="display:none;">←</button>
+  <div class="label" id="topLabel"><b>Elbi Production</b></div>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+<nav class="drawer" id="drawer">
+  <div class="brand display">ELBİ<span>PRODUCTION</span></div>
+  <div class="sectors" id="sectors"></div>
+</nav>
+
+<div class="wrap">
+  <div class="grid" id="grid"></div>
+  <main class="feed" id="feed" style="display:none;"></main>
+</div>
+
+<div class="modal-backdrop" id="formBackdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <b>Çekim / Edit Talep Formu</b>
+      <button id="formClose">×</button>
+    </div>
+    <iframe id="formFrame" src="about:blank" loading="lazy"></iframe>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   VİDEO EKLEMEK İÇİN: aşağıdaki VIDEOS dizisine yeni bir satır ekle.
+   youtubeId: YouTube linkindeki "shorts/" veya "v=" kısmından sonraki kod
+   sector: "saglikreels" | "egitim" | "sanayi" (SECTORS listesine de ekle)
+   org: kurum/marka adı (opsiyonel)
+   desc: videonun altında görünecek kısa brief (opsiyonel)
+   ===================================================================== */
+
+const SECTORS = [
+  { id: 'tumu',        label: 'Tümü' },
+  { id: 'saglikreels', label: 'Sağlıkreels' },
+  { id: 'egitim',      label: 'Eğitim' },
+  { id: 'sanayi',      label: 'Sanayi Tanıtım' },
+];
+
+const VIDEOS = [
+  { title: 'Eğitim İçeriği 1', sector: 'egitim', org: '', youtubeId: 'nwKrOPRkH38', desc: '' },
+  { title: 'Eğitim İçeriği 2', sector: 'egitim', org: '', youtubeId: 'QVnO_DdlaJQ', desc: '' },
+  { title: 'Eğitim İçeriği 3', sector: 'egitim', org: '', youtubeId: 'LIVncVSq8as', desc: '' },
+
+  { title: 'Başkent Hastanesi — Reels 1', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'AQL2BDiCn0U', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 2', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'hy0QWKsm2Wo', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 3', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'SRP3ug0bedY', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 4', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'Il9oDXrfxN0', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 5', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'lKFFNESnmdE', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 6', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'f-JLK3qsvNE', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 7', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'PIw7bHcGl58', desc: '' },
+  { title: 'Başkent Hastanesi — Reels 8', sector: 'saglikreels', org: 'Başkent Hastanesi', youtubeId: 'e_KagUgWgT8', desc: '' },
+  { title: 'Kışla Yerleşkesi — Reels 1', sector: 'saglikreels', org: 'Kışla Yerleşkesi', youtubeId: 'kv598S07n4w', desc: '' },
+];
+
+const drawerEl = document.getElementById('drawer');
+const backdropEl = document.getElementById('backdrop');
+const sectorsEl = document.getElementById('sectors');
+const gridEl = document.getElementById('grid');
+const feedEl = document.getElementById('feed');
+const burgerBtn = document.getElementById('burgerBtn');
+const backBtn = document.getElementById('backBtn');
+const topLabel = document.getElementById('topLabel');
+
+/* ÇEKİM TALEP FORMU
+   FORM_EMBED_URL: Google Form'un embed linki (...viewform?embedded=true)
+   VIDEO_ENTRY_ID: "Örnek Video" sorusunun entry ID'si (Google Form'da
+   "Önceden doldurulmuş bağlantı al" ile üretilen linkteki entry.XXXXXXXX
+   kısmındaki sayı). İkisini de gönderince burayı dolduracağım. */
+const FORM_EMBED_URL   = 'https://docs.google.com/forms/d/e/1FAIpQLSdxQaXUBsE5RinFUO0-WNgBx6Bsau-iY8jzGF01n2E09cY8xg/viewform?embedded=true';
+const VIDEO_ENTRY_ID   = '1056977962';
+
+const formBackdrop = document.getElementById('formBackdrop');
+const formFrame = document.getElementById('formFrame');
+const formClose = document.getElementById('formClose');
+
+function openRequestForm(videoUrl){
+  const sep = FORM_EMBED_URL.includes('?') ? '&' : '?';
+  formFrame.src = FORM_EMBED_URL + sep + 'entry.' + VIDEO_ENTRY_ID + '=' + encodeURIComponent(videoUrl);
+  formBackdrop.classList.add('open');
+}
+function closeForm(){ formBackdrop.classList.remove('open'); formFrame.src='about:blank'; }
+formClose.addEventListener('click', closeForm);
+formBackdrop.addEventListener('click', (e)=>{ if(e.target===formBackdrop) closeForm(); });
+
+let activeSector = 'tumu';
+let activeOrg = null;
+let expandedSector = null;
+let feedList = [];
+
+function orgsFor(sectorId){
+  return [...new Set(VIDEOS.filter(v=>v.sector===sectorId && v.org).map(v=>v.org))];
+}
+function sectorLabel(id){ const s=SECTORS.find(s=>s.id===id); return s?s.label:id; }
+function videosForSector(id){ return VIDEOS.filter(v=>v.sector===id); }
+function currentList(){
+  let list = activeSector==='tumu' ? VIDEOS : VIDEOS.filter(v=>v.sector===activeSector);
+  if(activeOrg) list = list.filter(v=>v.org===activeOrg);
+  return list;
+}
+
+function openDrawer(){ drawerEl.classList.add('open'); backdropEl.classList.add('open'); }
+function closeDrawer(){ drawerEl.classList.remove('open'); backdropEl.classList.remove('open'); }
+burgerBtn.addEventListener('click', openDrawer);
+backdropEl.addEventListener('click', closeDrawer);
+
+function renderSectors(){
+  sectorsEl.innerHTML = SECTORS.map(s => {
+    const orgs = s.id==='tumu' ? [] : orgsFor(s.id);
+    const open = expandedSector===s.id && orgs.length>0;
+    const totalCount = s.id==='tumu' ? VIDEOS.length : videosForSector(s.id).length;
+    const orgHtml = open ? `
+      <div class="org-list">
+        <button class="org-btn ${activeOrg===null?'active':''}" data-org="">Tümü <span class="cnt">${totalCount}</span></button>
+        ${orgs.map(o=>{
+          const c = VIDEOS.filter(v=>v.sector===s.id && v.org===o).length;
+          return `<button class="org-btn ${activeOrg===o?'active':''}" data-org="${o}">${o} <span class="cnt">${c}</span></button>`;
+        }).join('')}
+      </div>` : '';
+    return `<div class="sector-group">
+        <button class="sector-btn ${s.id===activeSector?'active':''}" data-id="${s.id}">
+          <span class="dot"></span><span>${s.label}</span><span class="cnt">${totalCount}</span>
+        </button>
+        ${orgHtml}
+      </div>`;
+  }).join('');
+
+  sectorsEl.querySelectorAll('.sector-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.dataset.id;
+      if(activeSector===id){
+        expandedSector = expandedSector===id ? null : id;
+      } else {
+        activeSector = id; activeOrg = null;
+        expandedSector = orgsFor(id).length>0 ? id : null;
+      }
+      renderSectors(); showGrid(); closeDrawer();
+    });
+  });
+  sectorsEl.querySelectorAll('.org-btn').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      activeOrg = btn.dataset.org || null;
+      renderSectors(); showGrid(); closeDrawer();
+    });
+  });
+}
+
+function updateTopLabel(){
+  let txt = '<b>' + sectorLabel(activeSector) + '</b>';
+  if(activeOrg) txt += ' · ' + activeOrg;
+  topLabel.innerHTML = txt;
+}
+
+function showGrid(){
+  gridEl.style.display='block'; feedEl.style.display='none';
+  burgerBtn.style.display='inline-block'; backBtn.style.display='none';
+  updateTopLabel();
+  renderGrid();
+}
+function showFeed(list, startIndex){
+  feedList = list;
+  gridEl.style.display='none'; feedEl.style.display='block';
+  burgerBtn.style.display='none'; backBtn.style.display='flex';
+  renderFeed();
+  const slides = feedEl.querySelectorAll('.slide');
+  if(slides[startIndex]) slides[startIndex].scrollIntoView({behavior:'instant', block:'start'});
+}
+backBtn.addEventListener('click', showGrid);
+
+function cellHtml(v){
+  return `<div class="cell" data-id="${v.youtubeId}" oncontextmenu="return false;">
+      <img src="https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg" alt="" draggable="false" ondragstart="return false;"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="ph" style="display:none;"></div>
+    </div>`;
+}
+
+function renderGrid(){
+  if(activeSector==='tumu'){
+    const sections = SECTORS.filter(s=>s.id!=='tumu').map(s=>({s, vids:videosForSector(s.id)})).filter(x=>x.vids.length>0);
+    if(sections.length===0){
+      gridEl.innerHTML = `<div class="empty-state"><div class="display">HENÜZ VİDEO YOK</div></div>`;
+      return;
+    }
+    gridEl.innerHTML = sections.map(({s,vids})=>`
+      <div class="section-head"><div><div class="eyebrow">Sektör</div><h3>${s.label}</h3></div><span class="cnt">${vids.length} video</span></div>
+      <div class="grid-cells" data-sector="${s.id}">${vids.map(cellHtml).join('')}</div>
+    `).join('');
+    gridEl.querySelectorAll('.grid-cells').forEach(gc=>{
+      const sid = gc.dataset.sector;
+      const vids = videosForSector(sid);
+      gc.querySelectorAll('.cell').forEach((c,i)=>{
+        c.addEventListener('click', ()=>{
+          activeSector = sid; activeOrg = null;
+          renderSectors(); updateTopLabel();
+          showFeed(vids, i);
+        });
+      });
+    });
+    return;
+  }
+
+  const list = currentList();
+  if(list.length===0){
+    gridEl.innerHTML = `<div class="empty-state">
+        <div class="display">HENÜZ VİDEO YOK</div>
+        <p>Bu filtrede video eklemek için VIDEOS listesine YouTube linkini ekle.</p>
+      </div>`;
+    return;
+  }
+  gridEl.innerHTML = `<div class="grid-cells">${list.map(cellHtml).join('')}</div>`;
+  gridEl.querySelectorAll('.cell').forEach((c,i)=>{
+    c.addEventListener('click', ()=> showFeed(list, i));
+  });
+}
+
+function renderFeed(){
+  feedEl.innerHTML = feedList.map(v => `
+    <section class="slide">
+      <div class="ply-head">
+        <div class="eyebrow">${sectorLabel(v.sector)}${v.org ? ' · '+v.org : ''}</div>
+        <h2>${v.title}</h2>
+      </div>
+      <div class="ply-frame">
+        <div class="inner" oncontextmenu="return false;">
+          <iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1&playsinline=1"
+            title="${v.title}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+      <div class="ply-cta">
+        <button class="req-btn" onclick="openRequestForm('https://www.youtube.com/shorts/${v.youtubeId}')">🎬 Bunun Gibi Bir Video İstiyorum</button>
+      </div>
+      ${v.desc ? `<div class="ply-caption"><p>${v.desc}</p></div>` : ''}
+    </section>
+  `).join('');
+}
+
+renderSectors();
+showGrid();
+</script>
+
+</body>
+</html>
