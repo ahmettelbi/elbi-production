@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hedef Müşteri Listesi — saglikreels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  /* Layout concept: a call-sheet style tracker — rows grouped by category
+     like scenes on a shot list, each with one-click lookups and a status
+     the user sets as they work through it. */
+  :root{
+    --bg:#F3F6F4; --surface:#FFFFFF; --surface-2:#EBF1EE;
+    --ink:#10201B; --muted:#5B6D66; --border:#D7E1DC;
+    --brand:#0E6B59; --brand-ink:#063D32;
+    --accent:#E24A30;
+    --font-display:'Fraunces',Georgia,'Times New Roman',serif;
+    --font-body:'Work Sans',system-ui,-apple-system,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0B1513; --surface:#101D19; --surface-2:#16251F;
+      --ink:#ECF4F0; --muted:#8FA59D; --border:#213832;
+      --brand:#33C9A6; --brand-ink:#9FEFDB;
+      --accent:#FF6A48;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B1513; --surface:#101D19; --surface-2:#16251F;
+    --ink:#ECF4F0; --muted:#8FA59D; --border:#213832;
+    --brand:#33C9A6; --brand-ink:#9FEFDB;
+    --accent:#FF6A48;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--font-body); font-size:14.5px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1100px; margin:0 auto; padding-inline:20px; padding-block:28px 60px}
+
+  header.top{display:flex; align-items:center; gap:10px; margin-bottom:6px}
+  .dot{width:9px; height:9px; border-radius:50%; background:var(--accent); flex:none;
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);}
+  .eyebrow{font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+
+  .site-nav{display:flex; gap:8px; margin:16px 0 22px; flex-wrap:wrap}
+  .site-nav a{
+    font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    padding:7px 13px; border-radius:999px; border:1px solid var(--border); color:var(--muted);
+    text-decoration:none; background:var(--surface);
+  }
+  .site-nav a:hover{border-color:var(--brand); color:var(--brand-ink)}
+  .site-nav a.active{background:var(--brand); border-color:var(--brand); color:#fff}
+
+  h1{font-family:var(--font-display); font-weight:600; font-style:italic;
+    font-size:clamp(24px,5vw,32px); margin:10px 0 8px; text-wrap:balance}
+  p.lede{color:var(--muted); max-width:70ch; margin:0 0 22px; font-size:14px}
+
+  .toolbar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:18px}
+  .toolbar input[type="search"]{
+    flex:1; min-width:180px; font-family:var(--font-body); font-size:13.5px;
+    padding:9px 12px; border:1px solid var(--border); border-radius:9px;
+    background:var(--surface); color:var(--ink);
+  }
+  .toolbar select{
+    font-family:var(--font-body); font-size:13.5px; padding:9px 10px;
+    border:1px solid var(--border); border-radius:9px; background:var(--surface); color:var(--ink);
+  }
+  .counts{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:18px}
+  .count-pill{
+    font-family:var(--font-mono); font-size:12px; color:var(--muted);
+    background:var(--surface-2); border:1px solid var(--border); border-radius:999px;
+    padding:6px 12px;
+  }
+  .count-pill b{color:var(--ink); font-weight:600}
+
+  .cat-group{margin-bottom:28px}
+  .cat-head{
+    display:flex; align-items:baseline; gap:10px; margin-bottom:10px;
+    padding-bottom:8px; border-bottom:1px solid var(--border);
+  }
+  .cat-head h2{font-family:var(--font-display); font-weight:600; font-size:17px; margin:0}
+  .cat-head .n{font-family:var(--font-mono); font-size:12px; color:var(--muted)}
+
+  table{width:100%; border-collapse:collapse}
+  .tbl-wrap{overflow-x:auto; border:1px solid var(--border); border-radius:12px}
+  th{
+    text-align:left; font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--muted); font-weight:600; padding:10px 12px; background:var(--surface-2);
+    white-space:nowrap; border-bottom:1px solid var(--border);
+  }
+  td{padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; font-size:13.5px}
+  tr:last-child td{border-bottom:none}
+  tr.row{background:var(--surface)}
+  tr.row:hover{background:color-mix(in srgb, var(--brand) 5%, var(--surface))}
+  tr.hidden{display:none}
+
+  .name{font-weight:600}
+  .addr{color:var(--muted); font-size:12.5px; max-width:260px}
+  .phone{font-family:var(--font-mono); font-size:12.5px; white-space:nowrap}
+
+  .linkbtn{
+    display:inline-flex; align-items:center; gap:4px; font-size:12.5px; font-weight:600;
+    color:var(--brand-ink); text-decoration:none; white-space:nowrap;
+  }
+  .linkbtn:hover{text-decoration:underline}
+  .links-cell{display:flex; flex-direction:column; gap:4px}
+
+  select.status{
+    font-family:var(--font-body); font-size:12.5px; padding:6px 8px;
+    border:1px solid var(--border); border-radius:7px; background:var(--surface); color:var(--ink);
+    min-width:140px;
+  }
+  select.status[data-val="dm"]{border-color:#D9A441; color:#8A5F10}
+  select.status[data-val="cevap"]{border-color:var(--brand); color:var(--brand-ink)}
+  select.status[data-val="musteri"]{background:var(--brand); border-color:var(--brand); color:#fff}
+  select.status[data-val="yok"]{opacity:.55}
+
+  textarea.note{
+    width:100%; min-width:140px; font-family:var(--font-body); font-size:12.5px;
+    padding:6px 8px; border:1px solid var(--border); border-radius:7px;
+    background:var(--surface); color:var(--ink); resize:vertical; min-height:32px;
+  }
+
+  .foot-note{
+    margin-top:24px; font-size:12.5px; color:var(--muted); background:var(--surface-2);
+    border-radius:10px; padding:14px 16px; max-width:70ch;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <span class="dot" aria-hidden="true"></span>
+    <span class="eyebrow">saglikreels · hedef müşteri listesi · Adana</span>
+  </header>
+
+  <nav class="site-nav">
+    <a href="index.html">Portfolyo</a>
+    <a href="hedef-liste.html" class="active">Hedef Liste</a>
+    <a href="teklif-al.html">Teklif Al</a>
+  </nav>
+
+  <h1>Kategoriye göre aday listesi</h1>
+  <p class="lede">Google Haritalar'dan derlenmiş gerçek işletmeler. Instagram hesapları otomatik doğrulanamadığı için her satırda hazır bir arama linki var — tek tıkla bul, DM at, durumu işaretle. Bu sayfa sadece senin tarayıcında saklanıyor (durum/not değişiklikleri senden başkasına görünmez).</p>
+
+  <div class="toolbar">
+    <input type="search" id="search" placeholder="İsim veya adrese göre ara…" />
+    <select id="cat-filter"><option value="">Tüm kategoriler</option></select>
+    <select id="status-filter">
+      <option value="">Tüm durumlar</option>
+      <option value="aranmadi">Aranmadı</option>
+      <option value="dm">DM / Mail Atıldı</option>
+      <option value="cevap">Cevap Bekleniyor</option>
+      <option value="musteri">Müşteri Oldu</option>
+      <option value="yok">İlgilenmedi</option>
+    </select>
+  </div>
+
+  <div class="counts" id="counts"></div>
+
+  <div id="groups"></div>
+
+  <p class="foot-note">Kaynak: Google Haritalar (işletme adı, adres, telefon). Instagram hesapları işletme adıyla otomatik aratılarak bulunur — bazı işletmelerin Instagram'ı olmayabilir veya farklı bir isimle kayıtlı olabilir, arama sonucunu kontrol ederek ilerle.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var DATA = [
+    {cat:"Psikolog", name:"Uzm. Klinik Psikolog Berna Köylü", addr:"Kurtuluş, Ramazanoğlu Cd. Gün Apt No:8 A Blok K:1 D:1, Seyhan/Adana", phone:"+90 530 544 79 01", mapsId:"ChIJIUgSI_WPKBURQ0YeueZHy6g"},
+    {cat:"Psikolog", name:"Psikolog Derya Genç", addr:"Beyazevler, Devlet Bahçeli Blv No:18, Çukurova/Adana", phone:"+90 551 678 42 84", mapsId:"ChIJf8ZSH8uTRi8RC5VW5HJowBw"},
+    {cat:"Psikolog", name:"Uzman Psikolog Cansel İpek", addr:"Kurtuluş, Ziyapaşa Blv. Gezerşen Plaza K:6 D:20, Seyhan/Adana", phone:"+90 539 566 19 31", mapsId:"ChIJWbEDu0CPKBURlJHKGyvulFw"},
+    {cat:"Psikolog", name:"Uzman Psikolog Mehmet Duman", addr:"Kurttepe, Süleyman Demirel Blv No:102 Köşk Plaza, Çukurova/Adana", phone:"", mapsId:"ChIJbQENRmqPKBURGV-l7cQ-C8A"},
+    {cat:"Psikolog", name:"Psk. Umut Kum", addr:"Beyazevler, Bülent Angın Blv No:138 K:1 D:1, Seyhan/Adana", phone:"+90 542 784 92 88", mapsId:"ChIJd6StpGCPKBURyLX4mcKEk5M"},
+    {cat:"Psikolog", name:"Adana Psikolog Gül Kır", addr:"Kurtuluş, Cumhuriyet Cd. MNS Plaza A Blok K:3 D:14, Seyhan/Adana", phone:"+90 541 152 52 82", mapsId:"ChIJGXhrX_2PKBURj2BSrm1OE-k"},
+
+    {cat:"Diyetisyen", name:"Diyetisyen Nihal Özdemir", addr:"Ziyapaşa, 67055. Sk. No:1, Seyhan/Adana", phone:"+90 553 468 94 54", mapsId:"ChIJzc50eb-PKBURXuSSGQk1rfM"},
+    {cat:"Diyetisyen", name:"Diyetisyen Tuğba Şeker Ağaç", addr:"Kurtuluş, Atatürk Cd. Gülbahçesi Sitesi B Blok K:2 D:205, Seyhan/Adana", phone:"+90 507 036 18 59", mapsId:"ChIJ09E1OgCPKBURFK-1hpFbeUk"},
+    {cat:"Diyetisyen", name:"Diyetisyen Emre Duymaz", addr:"Cemalpaşa, Gazipaşa Blv. Çelik Apt K:6 D:9, Seyhan/Adana", phone:"+90 542 680 03 30", mapsId:"ChIJW6NV6POPKBURi-Km2Pl_AmA"},
+    {cat:"Diyetisyen", name:"Diyetisyen Eda Tekeli | Form&Flow", addr:"Cemalpaşa, 63008. Sk. 4B, Seyhan/Adana", phone:"+90 534 661 30 23", mapsId:"ChIJ9ZdL88qPKBUR48Lu1oyNHb8"},
+    {cat:"Diyetisyen", name:"Uzm. Diyetisyen Selen Civelek | Daha İyi Yaşa", addr:"Reşatbey, 62030. Sk. No:6 K:4 D:7, Seyhan/Adana", phone:"+90 532 683 33 23", mapsId:"ChIJB5nZMUiPKBUR42DnVliIeUw"},
+    {cat:"Diyetisyen", name:"Diyetisyen Esma Aydemir", addr:"Toros, 78083. Sk. No:3, Çukurova/Adana", phone:"+90 555 108 28 30", mapsId:"ChIJH-0WNWmPKBURlAYdnal7zqc"},
+
+    {cat:"Çocuk Doktoru", name:"Uzm. Dr. Songül Uzgelir", addr:"Kurtuluş, Şinasi Efendi Rezidans 1, K:5 D:10, Seyhan/Adana", phone:"+90 545 129 23 22", mapsId:"ChIJB48co0OPKBUREP_5xRwKrCA"},
+    {cat:"Çocuk Doktoru", name:"Doç. Dr. Buket Kılıçaslan Hersekli", addr:"Hurmalı, Kurtuluş Cd. Central Plaza K:7 D:72, Seyhan/Adana", phone:"+90 542 113 19 73", mapsId:"ChIJzX8HCjmJKBUR7QsVzlC5yXY"},
+    {cat:"Çocuk Doktoru", name:"Uzm. Dr. Bülent Samlı", addr:"Mahfesığmaz, Turgut Özal Blv No:77 Terrapark K:2, Çukurova/Adana", phone:"+90 850 474 25 47", mapsId:"ChIJBXQkiVaJKBURkXxb6nrikkA"},
+    {cat:"Çocuk Doktoru", name:"Doç. Dr. Engin Melek", addr:"Kışla, Dr. Mithat Özsan Blv. 4522. Sk. No:28, Yüreğir/Adana", phone:"+90 545 363 05 01", mapsId:"ChIJn7MLngWJKBURa6jMGxKal5o"},
+    {cat:"Çocuk Doktoru", name:"Dr. Ebru Ayaş", addr:"Kurtuluş, 64019. Sk. Özbey Apt K:2 D:5, Seyhan/Adana", phone:"+90 541 349 66 10", mapsId:"ChIJt1OPJW-PKBURj8XBWTzQbM4"},
+    {cat:"Çocuk Doktoru", name:"Uzm. Dr. Ali Seçkin Yalçın", addr:"2000 Evler, Mavi Blv. Arma Moda Sitesi, Seyhan/Adana", phone:"+90 850 811 37 38", mapsId:"ChIJnd8cbMGJKBURVtaPRIp9DOQ"},
+
+    {cat:"Fizyoterapist", name:"Fizyoterapist Mehmet Korkmaz | Adana Fizik Tedavi", addr:"Kenan Evren Blv. 78068, Toros, K:1 D:1, Çukurova/Adana", phone:"+90 534 408 90 33", mapsId:"ChIJI3GQH52JKBURjrSPR159_NI"},
+    {cat:"Fizyoterapist", name:"Fizyoterapist Aslı Yener İncir & Ünal İncir", addr:"Mahfesığmaz, Turgut Özal Blv No:9 Uğurser Apt K:1, Çukurova/Adana", phone:"+90 505 986 09 43", mapsId:"ChIJ3U8rWJyPKBURKOA2JhiR2rI"},
+    {cat:"Fizyoterapist", name:"Fizyoterapist İsmail Şahpaz", addr:"Gürselpaşa, Aliya İzzet Begoviç Blv, Seyhan/Adana", phone:"+90 506 241 31 78", mapsId:"ChIJX1ahdtyJKBURBm5JUhBLX3I"},
+    {cat:"Fizyoterapist", name:"Fizyoterapist Büşra Köylü", addr:"Belediye Evleri, Turgut Özal Blv. Ülküm Apt K:1 D:3, Çukurova/Adana", phone:"+90 530 161 00 84", mapsId:"ChIJd3LlmpaJKBURZS9rhs_Y4bQ"},
+    {cat:"Fizyoterapist", name:"Uzm. Fzt. Berkay Tutar | Skolyoz Merkezi", addr:"Gürselpaşa, Öğretmenler Blv. Tepelizade İş Merkezi No:2/18, Seyhan/Adana", phone:"+90 532 371 37 77", mapsId:"ChIJj9AB07WJKBURmwi58EM5qC0"},
+    {cat:"Fizyoterapist", name:"Uzman Fizyoterapist Yaşam Türközer", addr:"Kurtuluş, 64019. Sk 50.Yıl Apt K:1 D:6, Seyhan/Adana", phone:"+90 538 716 12 44", mapsId:"ChIJj985IYGPKBURcbyVjDFoVAY"},
+
+    {cat:"Diş Kliniği", name:"Klinik Adana Diş Polikliniği", addr:"Güzelyalı, Uğur Mumcu Blv. Adana Kule No:2/6, Çukurova/Adana", phone:"+90 538 428 51 38", mapsId:"ChIJ-_kds82JKBURXxfPxkiraaw"},
+    {cat:"Diş Kliniği", name:"Adana Özel PrimeDent Ağız ve Diş Sağlığı", addr:"Reşatbey, 62001. Sk. No:28/A, Seyhan/Adana", phone:"+90 539 827 74 63", mapsId:"ChIJ55IWAoOPKBURKTYX4UlG1DM"},
+    {cat:"Diş Kliniği", name:"Diş Hekimi Sibel Özen | Elmas Diş Kliniği", addr:"Bülent Angın Blv, Sümer, 69100. Sk. K:1 D:1, Seyhan/Adana", phone:"+90 551 597 87 92", mapsId:"ChIJSe-8TwWPKBUR4Ayei6cAKeE"},
+    {cat:"Diş Kliniği", name:"Pektaş Ağız ve Diş Sağlığı Polikliniği", addr:"Reşatbey, Stadyum Cd No:45/A, Seyhan/Adana", phone:"+90 544 104 94 35", mapsId:"ChIJd0k4FeGPKBURe-SqZ6Q-nR8"},
+    {cat:"Diş Kliniği", name:"Klinik 01 | Estetik Ortodonti İmplant", addr:"Güzelyalı, 81154. Sk. No:1 K:2 D:3, Çukurova/Adana", phone:"+90 538 591 11 11", mapsId:"ChIJQ5NUGm-JKBURGgDI08Dij6E"},
+    {cat:"Diş Kliniği", name:"Diş Hekimi Elif Koyun", addr:"Reşatbey, Gazipaşa Blv. Ulvi Özdemir Apt K:1 D:4, Seyhan/Adana", phone:"+90 545 166 95 01", mapsId:"ChIJXWh4XR2PKBURR8fhH0aU8t8"},
+
+    {cat:"Estetik & Güzellik", name:"Gloria Beauty Center", addr:"Rızabey Plaza 3-1/02, Güzelyalı, 81100. Sk., Çukurova/Adana", phone:"+90 322 233 00 06", mapsId:"ChIJVQ7qtemIKBURMqOR6vq_yGE"},
+    {cat:"Estetik & Güzellik", name:"Beauty Space Güzellik Merkezi", addr:"Kurtuluş, Ziyapaşa Blv. Ali Şadibey Apt No:12/1, Seyhan/Adana", phone:"+90 538 887 95 18", mapsId:"ChIJvb3MEnOPKBURiD6HErc15lY"},
+    {cat:"Estetik & Güzellik", name:"Esther Beauty World", addr:"Kurtuluş, 64019. Sk. Evren Apt Asma Kat, Seyhan/Adana", phone:"+90 543 521 32 99", mapsId:"ChIJZ5Bl1wKHKBURbtirFtkP_zU"},
+    {cat:"Estetik & Güzellik", name:"Estelite Klinik | Botoks, Dudak Dolgusu", addr:"Güzelyalı, Turgut Özal Blv. 74C, Çukurova/Adana", phone:"+90 322 212 02 02", mapsId:"ChIJw5gcjrWOKBURV_dT4yolyd0"},
+    {cat:"Estetik & Güzellik", name:"Adana Eylül Güzellik Merkezi", addr:"Sümer, Baraj Cd. Topbaş Apt A Blok No:49 K:2, Seyhan/Adana", phone:"+90 506 181 81 06", mapsId:"ChIJw4pSGmWPKBURvG7wIQMnG7k"},
+    {cat:"Estetik & Güzellik", name:"Babygirl Estetik Güzellik Merkezi", addr:"Güzelyalı, 81186. Sk. No:7A, Çukurova/Adana", phone:"+90 533 600 30 95", mapsId:"ChIJpddqW6eJKBURnn-5VW4j7uY"}
+  ];
+
+  var STATUS_LABELS = {
+    aranmadi:"Aranmadı", dm:"DM / Mail Atıldı", cevap:"Cevap Bekleniyor",
+    musteri:"Müşteri Oldu", yok:"İlgilenmedi"
+  };
+
+  var STORE_KEY = "saglikreels_lead_status_v1";
+  function loadStore(){
+    try { return JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); }
+    catch(e){ return {}; }
+  }
+  function saveStore(store){
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch(e){}
+  }
+  var store = loadStore();
+
+  function rowKey(item, idx){ return item.cat + "::" + item.name + "::" + idx; }
+
+  function igSearchUrl(name){
+    return "https://www.google.com/search?q=" + encodeURIComponent(name + " Adana instagram");
+  }
+  function mapsUrl(id){
+    return "https://www.google.com/maps/place/?q=place_id:" + id;
+  }
+
+  var groupsEl = document.getElementById('groups');
+  var catFilter = document.getElementById('cat-filter');
+  var statusFilter = document.getElementById('status-filter');
+  var searchInput = document.getElementById('search');
+  var countsEl = document.getElementById('counts');
+
+  var cats = [];
+  DATA.forEach(function(d){ if (cats.indexOf(d.cat) === -1) cats.push(d.cat); });
+  cats.forEach(function(c){
+    var o = document.createElement('option'); o.value = c; o.textContent = c;
+    catFilter.appendChild(o);
+  });
+
+  function buildTable(cat, items){
+    var group = document.createElement('div');
+    group.className = 'cat-group'; group.dataset.cat = cat;
+
+    var head = document.createElement('div'); head.className = 'cat-head';
+    head.innerHTML = '<h2>' + cat + '</h2><span class="n">' + items.length + ' aday</span>';
+    group.appendChild(head);
+
+    var tblWrap = document.createElement('div'); tblWrap.className = 'tbl-wrap';
+    var table = document.createElement('table');
+    table.innerHTML = '<thead><tr>' +
+      '<th>İşletme / Kişi</th><th>Adres</th><th>Telefon</th><th>Bul</th><th>Durum</th><th>Not</th>' +
+      '</tr></thead>';
+    var tbody = document.createElement('tbody');
+
+    items.forEach(function(item){
+      var key = rowKey(item, item._idx);
+      var saved = store[key] || {};
+      var tr = document.createElement('tr');
+      tr.className = 'row';
+      tr.dataset.name = item.name.toLowerCase();
+      tr.dataset.addr = item.addr.toLowerCase();
+      tr.dataset.cat = item.cat;
+      tr.dataset.status = saved.status || '';
+
+      var tdName = document.createElement('td');
+      tdName.innerHTML = '<div class="name">' + item.name + '</div>';
+      tr.appendChild(tdName);
+
+      var tdAddr = document.createElement('td');
+      tdAddr.innerHTML = '<div class="addr">' + item.addr + '</div>';
+      tr.appendChild(tdAddr);
+
+      var tdPhone = document.createElement('td');
+      tdPhone.innerHTML = item.phone ? '<span class="phone">' + item.phone + '</span>' : '<span class="addr">—</span>';
+      tr.appendChild(tdPhone);
+
+      var tdLinks = document.createElement('td');
+      var linksWrap = document.createElement('div'); linksWrap.className = 'links-cell';
+      var igLink = document.createElement('a');
+      igLink.className = 'linkbtn'; igLink.href = igSearchUrl(item.name);
+      igLink.target = '_blank'; igLink.rel = 'noopener';
+      igLink.textContent = 'Instagram\'ı bul ↗';
+      linksWrap.appendChild(igLink);
+      var mapLink = document.createElement('a');
+      mapLink.className = 'linkbtn'; mapLink.href = mapsUrl(item.mapsId);
+      mapLink.target = '_blank'; mapLink.rel = 'noopener';
+      mapLink.textContent = 'Haritada aç ↗';
+      linksWrap.appendChild(mapLink);
+      tdLinks.appendChild(linksWrap);
+      tr.appendChild(tdLinks);
+
+      var tdStatus = document.createElement('td');
+      var sel = document.createElement('select'); sel.className = 'status';
+      Object.keys(STATUS_LABELS).forEach(function(k){
+        var o = document.createElement('option'); o.value = k; o.textContent = STATUS_LABELS[k];
+        sel.appendChild(o);
+      });
+      sel.value = saved.status || 'aranmadi';
+      sel.dataset.val = sel.value;
+      sel.addEventListener('change', function(){
+        sel.dataset.val = sel.value;
+        tr.dataset.status = sel.value;
+        var s = loadStore(); s[key] = s[key] || {}; s[key].status = sel.value; saveStore(s);
+        applyFilters();
+        renderCounts();
+      });
+      tdStatus.appendChild(sel);
+      tr.appendChild(tdStatus);
+
+      var tdNote = document.createElement('td');
+      var ta = document.createElement('textarea'); ta.className = 'note';
+      ta.placeholder = 'kısa not…';
+      ta.value = saved.note || '';
+      ta.addEventListener('input', function(){
+        var s = loadStore(); s[key] = s[key] || {}; s[key].note = ta.value; saveStore(s);
+      });
+      tdNote.appendChild(ta);
+      tr.appendChild(tdNote);
+
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    tblWrap.appendChild(table);
+    group.appendChild(tblWrap);
+    return group;
+  }
+
+  DATA.forEach(function(d, i){ d._idx = i; });
+
+  cats.forEach(function(cat){
+    var items = DATA.filter(function(d){ return d.cat === cat; });
+    groupsEl.appendChild(buildTable(cat, items));
+  });
+
+  function applyFilters(){
+    var q = searchInput.value.trim().toLowerCase();
+    var cat = catFilter.value;
+    var status = statusFilter.value;
+    document.querySelectorAll('.cat-group').forEach(function(group){
+      var groupCat = group.dataset.cat;
+      var groupVisible = !cat || cat === groupCat;
+      var anyRowVisible = false;
+      group.querySelectorAll('tr.row').forEach(function(tr){
+        var matchesQ = !q || tr.dataset.name.indexOf(q) !== -1 || tr.dataset.addr.indexOf(q) !== -1;
+        var matchesStatus = !status || tr.dataset.status === status || (!tr.dataset.status && status === 'aranmadi');
+        var visible = groupVisible && matchesQ && matchesStatus;
+        tr.classList.toggle('hidden', !visible);
+        if (visible) anyRowVisible = true;
+      });
+      group.style.display = anyRowVisible ? '' : 'none';
+    });
+  }
+
+  function renderCounts(){
+    var counts = {};
+    Object.keys(STATUS_LABELS).forEach(function(k){ counts[k] = 0; });
+    document.querySelectorAll('select.status').forEach(function(sel){
+      counts[sel.value] = (counts[sel.value] || 0) + 1;
+    });
+    countsEl.innerHTML = '<span class="count-pill">Toplam <b>' + DATA.length + '</b></span>' +
+      Object.keys(STATUS_LABELS).map(function(k){
+        return '<span class="count-pill">' + STATUS_LABELS[k] + ' <b>' + counts[k] + '</b></span>';
+      }).join('');
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+  catFilter.addEventListener('change', applyFilters);
+  statusFilter.addEventListener('change', applyFilters);
+
+  renderCounts();
+})();
+</script>
+
+</body>
+</html>
