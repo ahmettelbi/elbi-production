@@ -4,17 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Teklif Al — saglikreels</title>
+<meta name="description" content="Adana'da sağlık sektörü için profesyonel Reels prodüksiyonu — çekim, kurgu, içerik stratejisi ve paylaşım. Size özel teklif için formu doldurun.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
-  /* Layout concept: a single-screen "slate" card — one clear cut from
-     invitation to action, the CTA framed like a clapperboard strike. */
+  /* Layout concept: an editorial service page — hero, then a run of
+     labeled sections (who / what / how), each with its own numbered
+     or lettered device, closing on the same CTA that opened it. */
   :root{
     --bg:#F3F6F4; --surface:#FFFFFF; --surface-2:#EBF1EE;
     --ink:#10201B; --muted:#5B6D66; --border:#D7E1DC;
-    --brand:#0E6B59; --brand-ink:#063D32;
-    --accent:#E24A30;
+    --brand:#0E6B59; --brand-ink:#063D32; --brand-soft:#DCEFE9;
+    --accent:#E24A30; --accent-soft:#FBE2DC;
     --font-display:'Fraunces',Georgia,'Times New Roman',serif;
     --font-body:'Work Sans',system-ui,-apple-system,sans-serif;
     --font-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
@@ -23,30 +25,28 @@
     :root:not([data-theme="light"]){
       --bg:#0B1513; --surface:#101D19; --surface-2:#16251F;
       --ink:#ECF4F0; --muted:#8FA59D; --border:#213832;
-      --brand:#33C9A6; --brand-ink:#9FEFDB;
-      --accent:#FF6A48;
+      --brand:#33C9A6; --brand-ink:#9FEFDB; --brand-soft:#132A24;
+      --accent:#FF6A48; --accent-soft:#2A1812;
       color-scheme:dark;
     }
   }
   :root[data-theme="dark"]{
     --bg:#0B1513; --surface:#101D19; --surface-2:#16251F;
     --ink:#ECF4F0; --muted:#8FA59D; --border:#213832;
-    --brand:#33C9A6; --brand-ink:#9FEFDB;
-    --accent:#FF6A48;
+    --brand:#33C9A6; --brand-ink:#9FEFDB; --brand-soft:#132A24;
+    --accent:#FF6A48; --accent-soft:#2A1812;
     color-scheme:dark;
   }
 
   *{box-sizing:border-box}
-  html,body{height:100%}
   body{
     margin:0; background:var(--bg); color:var(--ink);
-    font-family:var(--font-body); font-size:15px; line-height:1.55;
+    font-family:var(--font-body); font-size:15px; line-height:1.6;
     -webkit-font-smoothing:antialiased;
-    display:flex; flex-direction:column; align-items:center;
-    padding-inline:20px; padding-block:32px 40px;
   }
+  .wrap{max-width:740px; margin:0 auto; padding-inline:20px; padding-block:28px 60px}
 
-  .site-nav{display:flex; gap:8px; margin:0 0 24px; flex-wrap:wrap; width:100%; max-width:480px; justify-content:center}
+  .site-nav{display:flex; gap:8px; margin:0 0 28px; flex-wrap:wrap}
   .site-nav a{
     font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
     padding:7px 13px; border-radius:999px; border:1px solid var(--border); color:var(--muted);
@@ -55,55 +55,122 @@
   .site-nav a:hover{border-color:var(--brand); color:var(--brand-ink)}
   .site-nav a.active{background:var(--brand); border-color:var(--brand); color:#fff}
 
-  .card{
-    width:100%; max-width:480px; background:var(--surface); margin:auto 0;
-    border:1px solid var(--border); border-radius:18px; padding:32px 28px;
-  }
+  section{margin-bottom:56px}
+  section:last-of-type{margin-bottom:0}
 
-  .top{display:flex; align-items:center; gap:10px; margin-bottom:18px}
-  .dot{
-    width:9px; height:9px; border-radius:50%; background:var(--accent); flex:none;
-    box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
-  }
   .eyebrow{
+    display:flex; align-items:center; gap:8px; margin-bottom:12px;
     font-family:var(--font-mono); font-size:11px; letter-spacing:.14em;
     text-transform:uppercase; color:var(--muted);
   }
+  .dot{
+    width:8px; height:8px; border-radius:50%; background:var(--accent); flex:none;
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
 
-  h1{
+  /* Hero */
+  .hero h1{
     font-family:var(--font-display); font-weight:600; font-style:italic;
-    font-size:clamp(24px,6vw,30px); line-height:1.15; margin:0 0 10px;
-    text-wrap:balance;
+    font-size:clamp(32px,6.5vw,46px); line-height:1.1; margin:0 0 16px;
+    text-wrap:balance; max-width:16ch;
   }
-  p.lede{color:var(--muted); margin:0 0 24px; font-size:14.5px}
-
-  .steps{
-    display:grid; gap:12px; margin-bottom:26px; padding:16px;
-    background:var(--surface-2); border-radius:12px;
-  }
-  .steps .row{display:flex; gap:10px; align-items:flex-start; font-size:13.5px}
-  .steps .n{
-    font-family:var(--font-mono); font-size:11px; color:var(--brand-ink);
-    background:var(--surface); border:1px solid var(--border);
-    border-radius:999px; width:20px; height:20px; flex:none;
-    display:inline-flex; align-items:center; justify-content:center;
-  }
-  .steps .row b{font-weight:600}
-  .steps .row span{color:var(--muted)}
+  .hero p.lede{color:var(--muted); max-width:52ch; margin:0 0 28px; font-size:16px}
 
   a.cta{
-    display:flex; align-items:center; justify-content:center; gap:8px;
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
     font-family:var(--font-body); font-weight:600; font-size:15px;
     background:var(--accent); color:#fff; text-decoration:none;
-    border-radius:11px; padding:15px 18px; width:100%;
+    border-radius:11px; padding:15px 24px;
   }
   a.cta:hover{filter:brightness(1.06)}
-  .cta-note{
-    text-align:center; font-size:12px; color:var(--muted); margin-top:10px;
+  .cta-note{font-size:12px; color:var(--muted); margin:10px 0 0}
+  .cta-block{display:flex; flex-direction:column; align-items:flex-start}
+
+  /* Section heads */
+  h2{
+    font-family:var(--font-display); font-weight:600; font-style:italic;
+    font-size:clamp(20px,3.5vw,25px); margin:0 0 6px; text-wrap:balance;
+  }
+  p.section-lede{color:var(--muted); max-width:58ch; margin:0 0 22px; font-size:14.5px}
+
+  /* Sector chips */
+  .chip-row{display:flex; flex-wrap:wrap; gap:8px}
+  .chip{
+    font-size:13px; font-weight:500; padding:8px 14px; border-radius:999px;
+    background:var(--surface); border:1px solid var(--border); color:var(--ink);
   }
 
+  /* Service cards */
+  .svc-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  @media (max-width:640px){ .svc-grid{grid-template-columns:1fr} }
+  .svc-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:20px; display:flex; flex-direction:column; gap:10px;
+  }
+  .svc-badge{
+    width:30px; height:30px; border-radius:9px; display:flex; align-items:center;
+    justify-content:center; font-family:var(--font-mono); font-size:12px; font-weight:600;
+  }
+  .svc-badge.cekim{background:var(--brand-soft); color:var(--brand-ink)}
+  .svc-badge.standart{background:var(--surface-2); color:var(--ink)}
+  .svc-badge.premium{background:var(--accent-soft); color:var(--accent)}
+  .svc-card h3{font-family:var(--font-body); font-size:15px; font-weight:700; margin:0}
+  .svc-card p{color:var(--muted); font-size:13px; margin:0; line-height:1.6}
+  .svc-tag{
+    font-family:var(--font-mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--muted); margin-top:auto;
+  }
+
+  /* Equipment strip */
+  .equip-row{display:flex; flex-wrap:wrap; gap:10px}
+  .equip-item{
+    display:flex; align-items:center; gap:8px; font-size:13px; font-weight:500;
+    background:var(--surface-2); border-radius:9px; padding:9px 13px;
+  }
+  .equip-item .mk{font-family:var(--font-mono); font-size:11px; color:var(--brand-ink)}
+
+  /* Portfolio callout */
+  .portfolio-callout{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:22px; display:flex; align-items:center; justify-content:space-between;
+    gap:16px; flex-wrap:wrap;
+  }
+  .portfolio-callout .txt{flex:1; min-width:220px}
+  .portfolio-callout h3{font-family:var(--font-display); font-weight:600; font-style:italic; font-size:17px; margin:0 0 4px}
+  .portfolio-callout p{color:var(--muted); font-size:13.5px; margin:0}
+  a.secondary-cta{
+    display:inline-flex; align-items:center; gap:6px; flex:none;
+    font-family:var(--font-body); font-weight:600; font-size:13.5px;
+    background:var(--surface-2); color:var(--ink); text-decoration:none;
+    border:1px solid var(--border); border-radius:10px; padding:11px 16px;
+    white-space:nowrap;
+  }
+  a.secondary-cta:hover{border-color:var(--brand); color:var(--brand-ink)}
+
+  /* Process steps */
+  .steps{display:grid; gap:4px}
+  .step-row{
+    display:flex; gap:16px; padding:18px 0; border-bottom:1px solid var(--border);
+  }
+  .step-row:last-child{border-bottom:none}
+  .step-n{
+    font-family:var(--font-mono); font-size:13px; color:var(--brand-ink);
+    background:var(--brand-soft); border-radius:999px; width:30px; height:30px;
+    flex:none; display:flex; align-items:center; justify-content:center; font-weight:600;
+  }
+  .step-row h3{font-size:14.5px; font-weight:700; margin:2px 0 4px}
+  .step-row p{color:var(--muted); font-size:13.5px; margin:0}
+
+  /* Closing CTA */
+  .closing{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    padding:30px 26px; text-align:center;
+  }
+  .closing h2{margin-bottom:8px}
+  .closing p.section-lede{margin-inline:auto; margin-bottom:22px}
+
   .foot{
-    margin-top:24px; padding-top:18px; border-top:1px solid var(--border);
+    margin-top:36px; padding-top:20px; border-top:1px solid var(--border);
     display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
     font-size:12.5px; color:var(--muted);
   }
@@ -111,37 +178,122 @@
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<nav class="site-nav">
-  <a href="index.html">Portfolyo</a>
-  <a href="teklif-al.html" class="active">Teklif Al</a>
-</nav>
+  <nav class="site-nav">
+    <a href="index.html">Portfolyo</a>
+    <a href="teklif-al.html" class="active">Teklif Al</a>
+  </nav>
 
-<div class="card">
-  <div class="top">
-    <span class="dot" aria-hidden="true"></span>
-    <span class="eyebrow">saglikreels</span>
-  </div>
+  <section class="hero">
+    <div class="eyebrow"><span class="dot" aria-hidden="true"></span>saglikreels · içerik prodüksiyon</div>
+    <h1>Uzmanlığınızı Ekrana Taşıyoruz</h1>
+    <p class="lede">Adana'da sağlık sektöründeki uzmanlar için çekimden kurguya, içerik fikrinden paylaşıma kadar profesyonel Reels prodüksiyonu. Formu doldurun, kapsamınıza özel teklifle dönüş yapalım.</p>
+    <div class="cta-block">
+      <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSfC0AOtegpbsUJCt8-gqHeMpfqqVmEzqC05PvLRY3rsIR9tnw/viewform" target="_blank" rel="noopener">Teklif Formunu Doldur ↗</a>
+      <p class="cta-note">2 dakikanızı alır · yeni sekmede açılır</p>
+    </div>
+  </section>
 
-  <h1>Size özel içerik teklifi almak ister misiniz?</h1>
-  <p class="lede">Birkaç soruyu yanıtlayın, biz inceleyip size uygun kapsam ve fiyat teklifiyle dönüş yapalım.</p>
+  <section>
+    <div class="eyebrow">Kimlerle Çalışıyoruz</div>
+    <h2>Anlatacak çok şeyi olan uzmanlar</h2>
+    <p class="section-lede">Özellikle sosyal medyada kendi kitlesini oluşturmak isteyen, konuşacak derinliği olan sağlık profesyonelleriyle çalışıyoruz.</p>
+    <div class="chip-row">
+      <span class="chip">Psikolog</span>
+      <span class="chip">Diyetisyen</span>
+      <span class="chip">Çocuk Doktoru</span>
+      <span class="chip">Fizyoterapist</span>
+      <span class="chip">Diş Hekimi / Klinik</span>
+      <span class="chip">Estetik & Güzellik Merkezi</span>
+    </div>
+  </section>
 
-  <div class="steps">
-    <div class="row"><span class="n">1</span><span><b>Formu doldurun</b> — alanınız, istediğiniz video sayısı ve edit türü gibi birkaç kısa soru.</span></div>
-    <div class="row"><span class="n">2</span><span><b>Biz inceleriz</b> — cevaplarınıza göre kapsamı ve fiyatı netleştiririz.</span></div>
-    <div class="row"><span class="n">3</span><span><b>Dönüş yaparız</b> — Instagram veya e-posta üzerinden, genellikle 24 saat içinde.</span></div>
-  </div>
+  <section>
+    <div class="eyebrow">Hizmetlerimiz</div>
+    <h2>Çekimden kurguya tam kapsam</h2>
+    <p class="section-lede">İhtiyacınıza göre sadece çekim, sadece kurgu ya da baştan sona tüm süreç — formda tercihinizi belirtirsiniz.</p>
+    <div class="svc-grid">
+      <div class="svc-card">
+        <span class="svc-badge cekim">01</span>
+        <h3>Profesyonel Çekim</h3>
+        <p>Profesyonel ışık, yaka mikrofonu ve f/1.4 yüksek derinlikli premium lensli dijital kamerayla sahada çekim.</p>
+        <span class="svc-tag">Ekipman</span>
+      </div>
+      <div class="svc-card">
+        <span class="svc-badge standart">02</span>
+        <h3>Standart Edit</h3>
+        <p>Altyazı, arka plan müziği, basit renklendirme ve zoom in-out ile hızlı, sade bir sunum.</p>
+        <span class="svc-tag">Hızlı Teslim</span>
+      </div>
+      <div class="svc-card">
+        <span class="svc-badge premium">03</span>
+        <h3>Premium Edit</h3>
+        <p>2 farklı kamera açısı, motion grafik ara geçişler, kanca başlık girişi ve gerektiğinde stock görsel.</p>
+        <span class="svc-tag">Üst Segment</span>
+      </div>
+    </div>
+  </section>
 
-  <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSfC0AOtegpbsUJCt8-gqHeMpfqqVmEzqC05PvLRY3rsIR9tnw/viewform" target="_blank" rel="noopener">
-    Teklif Formunu Doldur ↗
-  </a>
-  <p class="cta-note">2 dakikanızı alır · yeni sekmede açılır</p>
+  <section>
+    <div class="eyebrow">Ekipman</div>
+    <div class="equip-row">
+      <span class="equip-item"><span class="mk">—</span> 2x Profesyonel Işık</span>
+      <span class="equip-item"><span class="mk">—</span> Yaka Mikrofonu</span>
+      <span class="equip-item"><span class="mk">—</span> Dijital Kamera</span>
+      <span class="equip-item"><span class="mk">—</span> f/1.4 Premium Lens</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="portfolio-callout">
+      <div class="txt">
+        <h3>Çalışmalarımızı görün</h3>
+        <p>Sağlık, eğitim ve sanayi sektörlerinden örnek Reels prodüksiyonlarımıza göz atın.</p>
+      </div>
+      <a class="secondary-cta" href="index.html">Portfolyoyu Aç →</a>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Nasıl İlerliyoruz</div>
+    <h2>Üç adımda teklif</h2>
+    <div class="steps">
+      <div class="step-row">
+        <span class="step-n">1</span>
+        <div>
+          <h3>Formu doldurun</h3>
+          <p>Uzmanlık alanınız, istediğiniz video sayısı ve edit türü gibi birkaç kısa soru.</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <span class="step-n">2</span>
+        <div>
+          <h3>Biz inceleriz</h3>
+          <p>Cevaplarınıza göre kapsamı ve fiyatı netleştiririz.</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <span class="step-n">3</span>
+        <div>
+          <h3>Dönüş yaparız</h3>
+          <p>Instagram veya e-posta üzerinden, genellikle 24 saat içinde.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing">
+    <h2>Hazırsanız başlayalım</h2>
+    <p class="section-lede">Formu doldurmanız iki dakikanızı alır, kalanını biz hallederiz.</p>
+    <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSfC0AOtegpbsUJCt8-gqHeMpfqqVmEzqC05PvLRY3rsIR9tnw/viewform" target="_blank" rel="noopener">Teklif Formunu Doldur ↗</a>
+  </section>
 
   <div class="foot">
     <span>Instagram: <b>@saglikreels</b></span>
     <span>E-posta: <b>saglikreels@gmail.com</b></span>
   </div>
-</div>
 
+</div>
 </body>
 </html>
