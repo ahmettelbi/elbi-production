@@ -145,7 +145,7 @@
   .shelf-head .cnt{font-size:11.5px;color:var(--muted);}
   .shelf-row-wrap{position:relative;}
   .shelf-track{display:flex;gap:7px;overflow-x:auto;scroll-snap-type:x proximity;
-    touch-action:pan-y;padding:0 10px 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+    touch-action:pan-x;padding:0 10px 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
   .shelf-track::-webkit-scrollbar{display:none;}
   .shelf-track .cell{flex:0 0 calc((100% - 14px)/3);scroll-snap-align:start;}
   .shelf-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:32px;height:32px;border-radius:50%;
@@ -465,10 +465,8 @@ function renderHome(){
     const sid = track.dataset.sector;
     const vids = videosForSector(sid);
     const label = sectorLabel(sid);
-    enableShelfTouch(track);
     track.querySelectorAll('.cell').forEach((c,i)=>{
       c.addEventListener('click', ()=>{
-        if(track._justDragged) return;
         // activeSector kasıtlı olarak değiştirilmiyor: feed'den geri dönüldüğünde
         // ana sayfadaki şerit görünümüne dönülsün, o markanın tekli ızgarasına değil.
         showFeed(vids, i, label);
@@ -484,50 +482,6 @@ function renderHome(){
       track.scrollBy({ left: amount, behavior: 'smooth' });
     });
   });
-}
-
-/* Şeritte parmakla sağa/sola kaydırma: touch-action:pan-y sayesinde dikey
-   hareket tarayıcıya (sayfa kaydırma) bırakılır; yatay hareketi burada
-   kendimiz yakalayıp scrollLeft'i elle güncelliyoruz. İlk belirgin hareket
-   hangi eksende olursa o eksen o dokunuş için kilitlenir. */
-function enableShelfTouch(track){
-  let touchId = null, startX = 0, startY = 0, startScrollLeft = 0, lockDir = null;
-
-  track.addEventListener('touchstart', (e)=>{
-    if(e.touches.length !== 1) return;
-    const t = e.touches[0];
-    touchId = t.identifier;
-    startX = t.clientX; startY = t.clientY;
-    startScrollLeft = track.scrollLeft;
-    lockDir = null;
-    track._justDragged = false;
-  }, { passive:true });
-
-  track.addEventListener('touchmove', (e)=>{
-    let t = null;
-    for(let k=0;k<e.touches.length;k++){ if(e.touches[k].identifier===touchId) t = e.touches[k]; }
-    if(!t) return;
-    const dx = t.clientX - startX;
-    const dy = t.clientY - startY;
-    if(lockDir === null){
-      if(Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
-      lockDir = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-    }
-    if(lockDir === 'x'){
-      track.scrollLeft = startScrollLeft - dx;
-      if(Math.abs(dx) > 8) track._justDragged = true;
-      e.preventDefault();
-    }
-    // lockDir==='y' ise hiçbir şey yapmıyoruz: touch-action:pan-y sayede
-    // tarayıcı bu dokunuşu sayfanın kendi dikey kaydırmasına bırakır.
-  }, { passive:false });
-
-  function endTouch(){
-    touchId = null; lockDir = null;
-    setTimeout(()=>{ track._justDragged = false; }, 50);
-  }
-  track.addEventListener('touchend', endTouch);
-  track.addEventListener('touchcancel', endTouch);
 }
 
 function renderGrid(){
