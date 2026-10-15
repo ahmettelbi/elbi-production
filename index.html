@@ -144,10 +144,10 @@
   .shelf-head .brand-name{font-family:var(--font-display);font-style:italic;font-weight:600;font-size:18px;color:var(--text);}
   .shelf-head .cnt{font-size:11.5px;color:var(--muted);}
   .shelf-row-wrap{position:relative;}
-  .shelf-track{display:flex;gap:7px;overflow-x:auto;scroll-snap-type:x proximity;
+  .shelf-track{display:flex;gap:7px;overflow-x:auto;
     touch-action:none;padding:0 10px 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
   .shelf-track::-webkit-scrollbar{display:none;}
-  .shelf-track .cell{flex:0 0 calc((100% - 14px)/3);scroll-snap-align:start;}
+  .shelf-track .cell{flex:0 0 calc((100% - 14px)/3);}
   .shelf-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:32px;height:32px;border-radius:50%;
     border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;
     display:flex;align-items:center;justify-content:center;font-size:15px;
@@ -547,7 +547,13 @@ function enableShelfGesture(track, scrollerEl){
     e.preventDefault();
 
     const dt = now - lastT;
-    if(dt > 0){ velX = (e.clientX - lastX) / dt; velY = (e.clientY - lastY) / dt; }
+    // Ani son örnek yerine üstel ortalama: elini kaldırmadan hemen önceki
+    // ufak bir duraksama tüm ivmeyi sıfırlamasın, "mekanik" kesilme azalsın.
+    if(dt > 0){
+      const nx = (e.clientX - lastX) / dt, ny = (e.clientY - lastY) / dt;
+      velX = velX * 0.7 + nx * 0.3;
+      velY = velY * 0.7 + ny * 0.3;
+    }
     lastX = e.clientX; lastY = e.clientY; lastT = now;
   });
 
