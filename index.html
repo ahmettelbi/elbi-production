@@ -145,7 +145,7 @@
   .shelf-head .cnt{font-size:11.5px;color:var(--muted);}
   .shelf-row-wrap{position:relative;}
   .shelf-track{display:flex;gap:7px;overflow-x:auto;scroll-snap-type:x proximity;
-    touch-action:pan-y;padding:0 10px 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+    touch-action:none;padding:0 10px 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
   .shelf-track::-webkit-scrollbar{display:none;}
   .shelf-track .cell{flex:0 0 calc((100% - 14px)/3);scroll-snap-align:start;}
   .shelf-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:32px;height:32px;border-radius:50%;
@@ -465,7 +465,7 @@ function renderHome(){
     const sid = track.dataset.sector;
     const vids = videosForSector(sid);
     const label = sectorLabel(sid);
-    enableShelfDrag(track);
+    enableShelfGesture(track, gridEl);
     track.querySelectorAll('.cell').forEach((c,i)=>{
       c.addEventListener('click', ()=>{
         if(track._justDragged) return;
@@ -486,21 +486,26 @@ function renderHome(){
   });
 }
 
-/* Şeritte parmakla sağa/sola kaydırma.
-   .shelf-track üzerinde touch-action:pan-y var: bu, DİKEY dokunuşun bu
-   elemanın üzerinde dahi her zaman tarayıcının kendi native sayfa
-   kaydırmasına gitmesini GARANTİ eder (tek yönlü izin, en güvenilir
-   davranış). Yatay yöne ise native izin verilmediği için tarayıcı o
-   hareketi hiç üstlenmez — onu burada Pointer Events ile biz yönetiyoruz,
-   böylece native dikey kaydırmayla asla çakışmaz. Bırakınca basit bir
-   sürtünme/ivme (momentum) ile akıcı biter — mekanik hissi bu veriyordu. */
-function enableShelfDrag(track){
+/* Şeritte parmak hareketi — TAM MANUEL yön yönlendirmesi.
+   Önceki iki deneme (touch-action:pan-x, sonra pan-y) tarayıcının kendi
+   "izin verilmeyen yönü atadaki kaydırılabilir elemana devret" davranışına
+   güveniyordu; bu davranış gerçek telefonlarda (özellikle iOS Safari)
+   güvenilir çalışmadı. Bu yüzden şerit üzerinde touch-action:none
+   kullanılıyor — tarayıcı bu elemanın üstündeki dokunuşa HİÇBİR native
+   tepki vermiyor, yön kararını tamamen biz veriyoruz:
+     - Parmak daha çok YATAY hareket ediyorsa: sadece bu şeridi kaydır.
+     - Parmak daha çok DİKEY hareket ediyorsa: tüm sayfayı (gridEl) kaydır.
+     - Hareket eşiği aşılmadıysa (düz dokunuş): hiçbir şey yapma, normal
+       "click" olayı video/linke gitsin.
+   Her iki yönde de bırakınca sürtünmeli bir ivme (momentum) ile akıcı biter. */
+function enableShelfGesture(track, scrollerEl){
   if(!window.PointerEvent) return; // çok eski tarayıcılarda sadece ok butonları çalışır
-  const DRAG_THRESHOLD = 4; // bu kadar pikselden az hareket = tıklama sayılır
-  let dragging = false, captured = false;
-  let startX = 0, startScrollLeft = 0, lastX = 0, lastT = 0, velocity = 0, moved = 0;
+  const THRESHOLD = 6;
+  let active = false, axis = null, captured = false;
+  let startX = 0, startY = 0, startLeft = 0, startTop = 0;
+  let lastX = 0, lastY = 0, lastT = 0, velX = 0, velY = 0;
   let momentumId = null;
-  let activePointerId = null;
+  let pointerId = null;
 
   function stopMomentum(){
     if(momentumId !== null){ cancelAnimationFrame(momentumId); momentumId = null; }
@@ -509,58 +514,64 @@ function enableShelfDrag(track){
   track.addEventListener('pointerdown', (e)=>{
     if(e.pointerType === 'mouse' && e.button !== 0) return;
     stopMomentum();
-    dragging = true; captured = false; moved = 0;
-    activePointerId = e.pointerId;
+    active = true; axis = null; captured = false;
+    pointerId = e.pointerId;
     startX = lastX = e.clientX;
-    startScrollLeft = track.scrollLeft;
+    startY = lastY = e.clientY;
+    startLeft = track.scrollLeft;
+    startTop = scrollerEl.scrollTop;
     lastT = performance.now();
-    velocity = 0;
+    velX = 0; velY = 0;
     track._justDragged = false;
-    // Dikkat: setPointerCapture burada ÇAĞRILMAZ — pointerdown anında
-    // yakalarsak Chromium sonraki "click" olayını tamamen yutuyor, düz bir
-    // dokunuş (tıklama) video açmaz hale geliyordu. Gerçekten sürüklendiği
-    // anlaşılınca (eşik aşılınca) aşağıda yakalıyoruz.
+    // setPointerCapture burada ÇAĞRILMAZ: hemen yakalarsak Chromium
+    // sonraki "click" olayını yutuyor, düz dokunuşla video açılmaz olur.
+    // Yön belli olup gerçekten sürüklendiği anlaşılınca aşağıda yakalanır.
   });
 
   track.addEventListener('pointermove', (e)=>{
-    if(!dragging || e.pointerId !== activePointerId) return;
+    if(!active || e.pointerId !== pointerId) return;
     const now = performance.now();
     const dx = e.clientX - startX;
-    moved = Math.max(moved, Math.abs(dx));
-    if(moved > DRAG_THRESHOLD){
-      if(!captured){
-        captured = true;
-        track._justDragged = true;
-        try{ track.setPointerCapture(e.pointerId); }catch(err){}
-      }
-      track.scrollLeft = startScrollLeft - dx;
-      e.preventDefault();
+    const dy = e.clientY - startY;
+
+    if(axis === null){
+      if(Math.abs(dx) < THRESHOLD && Math.abs(dy) < THRESHOLD) return;
+      axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      captured = true;
+      if(axis === 'x') track._justDragged = true;
+      try{ track.setPointerCapture(e.pointerId); }catch(err){}
     }
+
+    if(axis === 'x') track.scrollLeft = startLeft - dx;
+    else scrollerEl.scrollTop = startTop - dy;
+    e.preventDefault();
+
     const dt = now - lastT;
-    if(dt > 0) velocity = (e.clientX - lastX) / dt; // px / ms
-    lastX = e.clientX; lastT = now;
+    if(dt > 0){ velX = (e.clientX - lastX) / dt; velY = (e.clientY - lastY) / dt; }
+    lastX = e.clientX; lastY = e.clientY; lastT = now;
   });
 
-  function endDrag(e){
-    if(!dragging || e.pointerId !== activePointerId) return;
-    dragging = false;
+  function endGesture(e){
+    if(!active || e.pointerId !== pointerId) return;
+    active = false;
     if(captured){
       try{ track.releasePointerCapture(e.pointerId); }catch(err){}
-      let v = velocity * 16; // ~60fps karesi başına piksel
+      const el = axis === 'x' ? track : scrollerEl;
+      let v = (axis === 'x' ? velX : velY) * 16; // ~60fps karesi başına piksel
       const friction = 0.94;
       function step(){
         if(Math.abs(v) < 0.4){ momentumId = null; return; }
-        track.scrollLeft -= v;
+        if(axis === 'x') el.scrollLeft -= v; else el.scrollTop -= v;
         v *= friction;
         momentumId = requestAnimationFrame(step);
       }
       if(Math.abs(v) > 1.2) momentumId = requestAnimationFrame(step);
     }
-    captured = false;
+    captured = false; axis = null;
     setTimeout(()=>{ track._justDragged = false; }, 60);
   }
-  track.addEventListener('pointerup', endDrag);
-  track.addEventListener('pointercancel', endDrag);
+  track.addEventListener('pointerup', endGesture);
+  track.addEventListener('pointercancel', endGesture);
 }
 
 function renderGrid(){
