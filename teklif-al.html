@@ -7,35 +7,20 @@
 <meta name="description" content="Adana'da sağlık sektörü için profesyonel Reels prodüksiyonu — çekim, kurgu, içerik stratejisi ve paylaşım. Size özel teklif için formu doldurun.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
 <style>
   /* Layout concept: an editorial service page — hero, then a run of
      labeled sections (who / what / how), each with its own numbered
      or lettered device, closing on the same CTA that opened it. */
   :root{
-    --bg:#F3F6F4; --surface:#FFFFFF; --surface-2:#EBF1EE;
-    --ink:#10201B; --muted:#5B6D66; --border:#D7E1DC;
-    --brand:#0E6B59; --brand-ink:#063D32; --brand-soft:#DCEFE9;
-    --accent:#E24A30; --accent-soft:#FBE2DC;
-    --font-display:'Fraunces',Georgia,'Times New Roman',serif;
-    --font-body:'Work Sans',system-ui,-apple-system,sans-serif;
-    --font-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#0B1513; --surface:#101D19; --surface-2:#16251F;
-      --ink:#ECF4F0; --muted:#8FA59D; --border:#213832;
-      --brand:#33C9A6; --brand-ink:#9FEFDB; --brand-soft:#132A24;
-      --accent:#FF6A48; --accent-soft:#2A1812;
-      color-scheme:dark;
-    }
-  }
-  :root[data-theme="dark"]{
-    --bg:#0B1513; --surface:#101D19; --surface-2:#16251F;
-    --ink:#ECF4F0; --muted:#8FA59D; --border:#213832;
-    --brand:#33C9A6; --brand-ink:#9FEFDB; --brand-soft:#132A24;
-    --accent:#FF6A48; --accent-soft:#2A1812;
-    color-scheme:dark;
+    --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F7F9FB;
+    --ink:#0B0B0C; --muted:#9A9CA0; --border:#E7E9EC;
+    --brand:#8EE3FF; --brand-ink:#1690C9; --brand-soft:rgba(22,144,201,.12);
+    --mint:#B9F3E0; --lila:#C9B8FF;
+    --accent:#1690C9; --accent-soft:rgba(22,144,201,.12);
+    --font-display:'Space Grotesk',system-ui,-apple-system,sans-serif;
+    --font-body:'Inter',system-ui,-apple-system,sans-serif;
+    --font-mono:'Space Grotesk',system-ui,-apple-system,sans-serif;
   }
 
   *{box-sizing:border-box}
@@ -53,7 +38,7 @@
     text-decoration:none; background:var(--surface);
   }
   .site-nav a:hover{border-color:var(--brand); color:var(--brand-ink)}
-  .site-nav a.active{background:var(--brand); border-color:var(--brand); color:#fff}
+  .site-nav a.active{background:var(--accent); border-color:var(--accent); color:#fff}
 
   section{margin-bottom:56px}
   section:last-of-type{margin-bottom:0}
@@ -70,7 +55,7 @@
 
   /* Hero */
   .hero h1{
-    font-family:var(--font-display); font-weight:600; font-style:italic;
+    font-family:var(--font-display); font-weight:600;
     font-size:clamp(32px,6.5vw,46px); line-height:1.1; margin:0 0 16px;
     text-wrap:balance; max-width:16ch;
   }
@@ -88,7 +73,7 @@
 
   /* Section heads */
   h2{
-    font-family:var(--font-display); font-weight:600; font-style:italic;
+    font-family:var(--font-display); font-weight:600;
     font-size:clamp(20px,3.5vw,25px); margin:0 0 6px; text-wrap:balance;
   }
   p.section-lede{color:var(--muted); max-width:58ch; margin:0 0 22px; font-size:14.5px}
@@ -136,7 +121,7 @@
     gap:16px; flex-wrap:wrap;
   }
   .portfolio-callout .txt{flex:1; min-width:220px}
-  .portfolio-callout h3{font-family:var(--font-display); font-weight:600; font-style:italic; font-size:17px; margin:0 0 4px}
+  .portfolio-callout h3{font-family:var(--font-display); font-weight:600; font-size:17px; margin:0 0 4px}
   .portfolio-callout p{color:var(--muted); font-size:13.5px; margin:0}
   a.secondary-cta{
     display:inline-flex; align-items:center; gap:6px; flex:none;
@@ -175,6 +160,8 @@
     font-size:12.5px; color:var(--muted);
   }
   .foot b{color:var(--ink); font-weight:600}
+  .foot a{color:inherit; text-decoration:none}
+  .foot a:hover b{color:var(--brand-ink)}
 </style>
 </head>
 <body>
@@ -183,6 +170,8 @@
   <nav class="site-nav">
     <a href="index.html">Portfolyo</a>
     <a href="teklif-al.html" class="active">Teklif Al</a>
+    <a href="https://www.youtube.com/@Sa%C4%9Fl%C4%B1kReels" target="_blank" rel="noopener">YouTube ↗</a>
+    <a href="https://github.com/saglikreels-creator" target="_blank" rel="noopener">GitHub ↗</a>
   </nav>
 
   <section class="hero">
@@ -292,6 +281,8 @@
   <div class="foot">
     <span>Instagram: <b>@saglikreels</b></span>
     <span>E-posta: <b>saglikreels@gmail.com</b></span>
+    <span>YouTube: <a href="https://www.youtube.com/@Sa%C4%9Fl%C4%B1kReels" target="_blank" rel="noopener"><b>@SağlıkReels</b></a></span>
+    <span>GitHub: <a href="https://github.com/saglikreels-creator" target="_blank" rel="noopener"><b>saglikreels-creator</b></a></span>
   </div>
 
 </div>

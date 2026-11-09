@@ -14,19 +14,20 @@
 <meta property="og:url" content="https://ahmettelbi.github.io/elbi-production/">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1513'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='34' fill='%2333C9A6' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FFFFFF'/%3E%3Crect x='1' y='1' width='62' height='62' rx='13' fill='none' stroke='%23E7E9EC' stroke-width='2'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-weight='700' font-size='30' fill='%231690C9' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0B1513; --surface:#101D19; --card:#16251F; --text:#ECF4F0; --muted:#8FA59D;
-    --brand:#33C9A6; --brand-ink:#9FEFDB;
-    --accent:#FF6A48; --accent-soft:rgba(255,106,72,.14); --line:#213832;
-    --font-display:'Fraunces',Georgia,'Times New Roman',serif;
-    --font-body:'Work Sans',system-ui,-apple-system,sans-serif;
-    --font-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+    --bg:#FFFFFF; --surface:#F7F9FB; --card:#FFFFFF; --text:#0B0B0C; --muted:#9A9CA0;
+    --brand:#8EE3FF; --brand-ink:#1690C9;
+    --mint:#B9F3E0; --lila:#C9B8FF;
+    --accent:#1690C9; --accent-soft:rgba(22,144,201,.12); --line:#E7E9EC;
+    --font-display:'Space Grotesk',system-ui,-apple-system,sans-serif;
+    --font-body:'Inter',system-ui,-apple-system,sans-serif;
+    --font-mono:'Space Grotesk',system-ui,-apple-system,sans-serif;
     box-sizing:border-box;
     padding-top:env(safe-area-inset-top,0px);
     padding-bottom:env(safe-area-inset-bottom,0px);
@@ -35,14 +36,14 @@
   html{scroll-padding-top:env(safe-area-inset-top,0px);}
   html,body{height:100%;margin:0;background:var(--bg);color:var(--text);
     font-family:var(--font-body);overflow:hidden;}
-  .display{font-family:var(--font-display);font-style:italic;font-weight:600;letter-spacing:.01em;}
+  .display{font-family:var(--font-display);font-weight:600;letter-spacing:.01em;}
   .eyebrow-font{font-family:var(--font-mono);letter-spacing:.14em;text-transform:uppercase;}
 
   .topbar{
     position:fixed;top:0;left:0;right:0;z-index:40;height:calc(54px + env(safe-area-inset-top,0px));
     padding-top:env(safe-area-inset-top,0px);
     display:flex;align-items:center;gap:12px;padding-left:16px;padding-right:12px;
-    background:linear-gradient(180deg,rgba(11,21,19,.97),rgba(11,21,19,.8));
+    background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(255,255,255,.85));
     border-bottom:1px solid var(--line);
   }
   .menu-btn{
@@ -60,7 +61,7 @@
   .req-btn{
     background:var(--accent);color:#fff;border:none;cursor:pointer;
     padding:12px 20px;border-radius:999px;font-size:13px;font-weight:600;font-family:var(--font-body);
-    box-shadow:0 10px 26px -10px rgba(255,106,72,.55);width:100%;max-width:320px;
+    box-shadow:0 10px 26px -10px rgba(22,144,201,.45);width:100%;max-width:320px;
   }
   .req-btn:hover{filter:brightness(1.08);}
   .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:60;opacity:0;pointer-events:none;transition:opacity .2s;
@@ -89,7 +90,7 @@
   }
   .drawer.open{transform:translateX(0);}
   .brand{font-size:21px;line-height:1;margin:0 20px 26px;color:var(--text);}
-  .brand span{display:block;color:var(--brand);font-size:10.5px;letter-spacing:.24em;margin-top:5px;font-family:var(--font-mono);font-weight:600;font-style:normal;}
+  .brand span{display:block;color:var(--brand-ink);font-size:10.5px;letter-spacing:.24em;margin-top:5px;font-family:var(--font-mono);font-weight:600;font-style:normal;}
   .sectors{display:flex;flex-direction:column;gap:2px;padding:0 12px;}
   .sector-btn{
     width:100%;padding:13px 12px;border:none;background:none;color:var(--muted);
@@ -129,19 +130,19 @@
   .grid-cells{padding:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
   .section-head{padding:20px 16px 2px;display:flex;align-items:baseline;gap:10px;}
   .section-head .eyebrow{font-size:10px;letter-spacing:.2em;color:var(--brand-ink);text-transform:uppercase;font-weight:600;font-family:var(--font-mono);}
-  .section-head h3{margin:3px 0 10px;font-family:var(--font-display);font-style:italic;font-size:24px;letter-spacing:.01em;font-weight:600;color:var(--text);}
+  .section-head h3{margin:3px 0 10px;font-family:var(--font-display);font-size:24px;letter-spacing:.01em;font-weight:600;color:var(--text);}
   .section-head .cnt{font-size:12px;color:var(--muted);}
   .cell{position:relative;aspect-ratio:9/16;border-radius:10px;overflow:hidden;cursor:pointer;
-    background:linear-gradient(160deg,var(--card),#0b0f0d 70%);border:1px solid var(--line);}
+    background:linear-gradient(160deg,var(--card),var(--surface) 70%);border:1px solid var(--line);}
   .cell img{width:100%;height:100%;object-fit:cover;display:block;}
   .cell .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
   .cell .ph::after{content:'';width:0;height:0;margin-left:3px;
-    border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:14px solid rgba(236,244,240,.5);}
+    border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:14px solid rgba(11,11,12,.25);}
 
   /* ---- Netflix tarzı marka şeritleri (giriş sayfası) ---- */
   .shelf{padding:18px 0 6px;}
   .shelf-head{padding:0 16px 10px;display:flex;align-items:baseline;gap:9px;}
-  .shelf-head .brand-name{font-family:var(--font-display);font-style:italic;font-weight:600;font-size:18px;color:var(--text);}
+  .shelf-head .brand-name{font-family:var(--font-display);font-weight:600;font-size:18px;color:var(--text);}
   .shelf-head .cnt{font-size:11.5px;color:var(--muted);}
   .shelf-row-wrap{position:relative;}
   .shelf-track{display:flex;gap:7px;overflow-x:auto;
@@ -151,7 +152,7 @@
   .shelf-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:32px;height:32px;border-radius:50%;
     border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;
     display:flex;align-items:center;justify-content:center;font-size:15px;
-    box-shadow:0 6px 16px -6px rgba(255,106,72,.6);
+    box-shadow:0 6px 16px -6px rgba(22,144,201,.5);
     transition:filter .15s;}
   .shelf-arrow:hover{filter:brightness(1.08);}
   .shelf-arrow.left{left:0;}
@@ -164,7 +165,7 @@
     border-bottom:1px solid var(--line);}
   .ply-head{flex-shrink:0;padding-bottom:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
   .ply-head .eyebrow{font-size:10.5px;letter-spacing:.18em;color:var(--brand-ink);text-transform:uppercase;font-weight:600;font-family:var(--font-mono);}
-  .ply-head h2{margin:5px 0 0;font-size:19px;font-weight:600;letter-spacing:-.01em;color:var(--text);font-family:var(--font-display);font-style:italic;}
+  .ply-head h2{margin:5px 0 0;font-size:19px;font-weight:600;letter-spacing:-.01em;color:var(--text);font-family:var(--font-display);}
   .sound-btn{
     flex-shrink:0;margin-top:2px;border:1px solid var(--line);background:var(--surface);color:var(--text);
     cursor:pointer;font-size:11.5px;font-weight:600;padding:8px 13px;border-radius:999px;font-family:var(--font-body);
@@ -191,9 +192,9 @@
   .feed-back{
     position:fixed;left:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:45;
     height:42px;padding:0 18px 0 14px;border-radius:999px;border:1px solid var(--line);
-    background:rgba(16,29,25,.92);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);
+    background:rgba(255,255,255,.92);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);
     display:none;align-items:center;gap:7px;backdrop-filter:blur(6px);
-    box-shadow:0 10px 26px -10px rgba(0,0,0,.6);transition:border-color .15s,color .15s;
+    box-shadow:0 10px 26px -10px rgba(0,0,0,.25);transition:border-color .15s,color .15s;
   }
   .feed-back:hover{border-color:var(--brand);color:var(--brand-ink);}
   .feed-back .arrow{font-size:16px;}
@@ -218,6 +219,9 @@
   <div class="site-links">
     <div class="site-links-label">Diğer Sayfalar</div>
     <a class="site-link" href="teklif-al.html"><span>Teklif Al</span><span class="arrow">→</span></a>
+    <div class="site-links-label" style="margin-top:14px;">Bizi Takip Edin</div>
+    <a class="site-link" href="https://www.youtube.com/@Sa%C4%9Fl%C4%B1kReels" target="_blank" rel="noopener"><span>YouTube</span><span class="arrow">↗</span></a>
+    <a class="site-link" href="https://github.com/saglikreels-creator" target="_blank" rel="noopener"><span>GitHub</span><span class="arrow">↗</span></a>
   </div>
 </nav>
 
